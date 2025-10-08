@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Pokemon, PokemonListResult } from '../types';
@@ -35,7 +35,7 @@ const GalleryView: React.FC<GalleryViewProps> = ({
 }) => {
     const limit = 20;
 
-    const fetchPokemon = async (currentOffset: number) => {
+    const fetchPokemon = useCallback(async (currentOffset: number) => {
         if (isLoading || selectedTypes.length > 0) return;
         setIsLoading(true);
         try {
@@ -57,13 +57,13 @@ const GalleryView: React.FC<GalleryViewProps> = ({
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [isLoading, selectedTypes.length, setPokemonList, setOffset, setIsLoading]);
 
     useEffect(() => {
         if (pokemonList.length === 0 && selectedTypes.length === 0) {
             fetchPokemon(0);
         }
-    }, [pokemonList.length, selectedTypes.length]);
+    }, [pokemonList.length, selectedTypes.length, fetchPokemon]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -75,7 +75,7 @@ const GalleryView: React.FC<GalleryViewProps> = ({
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [offset, isLoading, selectedTypes.length]);
+    }, [offset, isLoading, selectedTypes.length, fetchPokemon]);
 
     useEffect(() => {
         const abortController = new AbortController();
