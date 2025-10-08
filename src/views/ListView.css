@@ -1,0 +1,126 @@
+.list-view {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    max-width: 800px;
+    max-height: calc(100vh - 70px - 1rem);
+    margin: auto;
+    position: relative;
+}
+
+.list-controls {
+    position: static;
+    background-color: #f0f8ff;
+    padding: 1rem 0;
+    z-index: 10;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    color: #aaa;
+}
+
+.search-container input {
+    flex-grow: 1;
+    padding: 12px 12px 12px 40px; /* Add padding for the icon */
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+}
+
+.list-header {
+    display: flex;
+    font-weight: 600;
+    padding: 10px 15px;
+    background-color: #e9ecef;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+    z-index: 11;
+}
+
+.list-header-item {
+    cursor: pointer;
+}
+
+.id-column {
+    flex: 1;
+}
+
+.name-column {
+    flex: 4;
+}
+
+.list-body {
+    overflow-y: auto;
+    flex-grow: 1;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.pokemon-list {
+    padding: 0;
+    margin: 0;
+}
+
+.list-item {
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 1px solid #eee;
+    list-style: none;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item-link {
+    display: flex;
+    padding: 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.list-item-link:hover {
+    background-color: #f8f9fa;
+    border-radius: 0;
+    text-decoration: none;
+}
+
+.pokemon-id {
+    font-weight: 600;
+    color: #888;
+}
+
+.loading-indicator {
+    padding: 2rem;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.pagination-controls button {
+    margin: 0 1rem;
+}

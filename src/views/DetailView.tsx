@@ -42,6 +42,7 @@ const DetailView: React.FC = () => {
             <p>Types: {pokemon.types.map(t => t.type.name).join(', ')}</p>
             <div>
                 <button onClick={() => goToPokemon(pokemonId - 1)} disabled={pokemonId <= 1}>Previous</button>
+                <button onClick={() => navigate(-1)}>Back</button>
                 <button onClick={() => goToPokemon(pokemonId + 1)} disabled={pokemonId >= 151}>Next</button>
             </div>
         </div>

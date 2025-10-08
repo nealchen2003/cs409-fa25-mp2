@@ -13,7 +13,7 @@ body {
 }
 
 main {
-    padding: 2rem;
+    padding: 0 1rem;
 }
 
 .gallery {
@@ -73,15 +73,6 @@ button:hover {
 button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-}
-
-input[type="text"], select {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    color: #333;
-    margin-right: 10px;
 }
 
 ul {

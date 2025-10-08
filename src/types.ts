@@ -16,4 +16,5 @@ export interface Pokemon {
 export interface PokemonListResult {
     name: string;
     url: string;
+    id: number;
 }
