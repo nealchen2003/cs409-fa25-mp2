@@ -1,46 +1,39 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Pokemon, PokemonListResult } from '../types';
 import './GalleryView.css';
 
-const GalleryView: React.FC = () => {
-    const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
-    const [allPokemonCache, setAllPokemonCache] = useState<PokemonListResult[]>([]);
-    const [filteredPokemon, setFilteredPokemon] = useState<Pokemon[]>([]);
-    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-    const [offset, setOffset] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
+interface GalleryViewProps {
+    pokemonList: Pokemon[];
+    setPokemonList: React.Dispatch<React.SetStateAction<Pokemon[]>>;
+    allPokemonCache: PokemonListResult[];
+    filteredPokemon: Pokemon[];
+    setFilteredPokemon: React.Dispatch<React.SetStateAction<Pokemon[]>>;
+    selectedTypes: string[];
+    setSelectedTypes: React.Dispatch<React.SetStateAction<string[]>>;
+    offset: number;
+    setOffset: React.Dispatch<React.SetStateAction<number>>;
+    isLoading: boolean;
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    allTypes: string[];
+}
+
+const GalleryView: React.FC<GalleryViewProps> = ({
+    pokemonList,
+    setPokemonList,
+    allPokemonCache,
+    filteredPokemon,
+    setFilteredPokemon,
+    selectedTypes,
+    setSelectedTypes,
+    offset,
+    setOffset,
+    isLoading,
+    setIsLoading,
+    allTypes,
+}) => {
     const limit = 20;
-
-    const [allTypes, setAllTypes] = useState<string[]>([]);
-
-    useEffect(() => {
-        const fetchAllPokemonReferences = async () => {
-            try {
-                const countResponse = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=1');
-                const count = countResponse.data.count;
-                const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${count}`);
-                setAllPokemonCache(response.data.results);
-            } catch (error) {
-                console.error('Error fetching all pokemon references:', error);
-            }
-        };
-        fetchAllPokemonReferences();
-
-        const fetchAllTypes = async () => {
-            try {
-                const response = await axios.get('https://pokeapi.co/api/v2/type');
-                const commonTypes = response.data.results
-                    .map((t: { name: string }) => t.name)
-                    .filter((t: string) => !['unknown', 'shadow'].includes(t));
-                setAllTypes(commonTypes);
-            } catch (error) {
-                console.error('Error fetching all pokemon types:', error);
-            }
-        };
-        fetchAllTypes();
-    }, []);
 
     const fetchPokemon = async (currentOffset: number) => {
         if (isLoading || selectedTypes.length > 0) return;
@@ -67,8 +60,10 @@ const GalleryView: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchPokemon(0);
-    }, []);
+        if (pokemonList.length === 0 && selectedTypes.length === 0) {
+            fetchPokemon(0);
+        }
+    }, [pokemonList.length, selectedTypes.length]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -136,13 +131,15 @@ const GalleryView: React.FC = () => {
         return () => {
             abortController.abort();
         };
-    }, [selectedTypes, allPokemonCache, pokemonList]);
+    }, [selectedTypes, allPokemonCache, pokemonList, setFilteredPokemon, setIsLoading]);
 
     const handleTypeChange = (type: string) => {
         setSelectedTypes(prev =>
             prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
         );
     };
+
+    const displayList = selectedTypes.length > 0 ? filteredPokemon : pokemonList;
 
     return (
         <div className="gallery-view">
@@ -159,7 +156,7 @@ const GalleryView: React.FC = () => {
                 ))}
             </div>
             <div className="gallery">
-                {filteredPokemon.map(pokemon => (
+                {displayList.map(pokemon => (
                     <Link to={`/pokemon/${pokemon.id}`} key={pokemon.id} className="gallery-item">
                         <img src={pokemon.sprites.front_default} alt={pokemon.name} />
                         <p>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</p>

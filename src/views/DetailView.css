@@ -1,0 +1,48 @@
+.detail-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: white;
+    vertical-align: middle;
+}
+
+.detail-view button {
+    align-items: center;
+    vertical-align: middle;
+}
+
+.detail-view img {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+}
+
+.detail-view h2 {
+    margin-bottom: 10px;
+}
+
+.detail-view p {
+    margin: 5px 0;
+}
+
+.detail-view div {
+    margin-top: 20px;
+}
+
+.detail-view button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+}

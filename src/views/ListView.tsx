@@ -1,49 +1,46 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Pokemon, PokemonListResult } from '../types';
-import { FaAngleLeft, FaAngleRight, FaSearch, FaTruckLoading } from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight, FaSearch } from 'react-icons/fa';
 import './ListView.css';
 
-const ListView: React.FC = () => {
-    const [allPokemonRefs, setAllPokemonRefs] = useState<PokemonListResult[]>([]);
-    const [pokemonOnPage, setPokemonOnPage] = useState<Pokemon[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [sortKey, setSortKey] = useState<'name' | 'id'>('id');
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-    const [currentPage, setCurrentPage] = useState(1);
+interface ListViewProps {
+    allPokemonRefs: PokemonListResult[];
+    pokemonOnPage: Pokemon[];
+    setPokemonOnPage: React.Dispatch<React.SetStateAction<Pokemon[]>>;
+    isLoading: boolean;
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    searchTerm: string;
+    setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+    sortKey: 'name' | 'id';
+    setSortKey: React.Dispatch<React.SetStateAction<'name' | 'id'>>;
+    sortOrder: 'asc' | 'desc';
+    setSortOrder: React.Dispatch<React.SetStateAction<'asc' | 'desc'>>;
+    currentPage: number;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const ListView: React.FC<ListViewProps> = ({
+    allPokemonRefs,
+    pokemonOnPage,
+    setPokemonOnPage,
+    isLoading,
+    setIsLoading,
+    searchTerm,
+    setSearchTerm,
+    sortKey,
+    setSortKey,
+    sortOrder,
+    setSortOrder,
+    currentPage,
+    setCurrentPage,
+}) => {
     const ITEMS_PER_PAGE = 50;
 
     useEffect(() => {
-        const fetchAllPokemonRefs = async () => {
-            try {
-                // First, get the count of all pokemon
-                const countResponse = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=1');
-                const count = countResponse.data.count;
-
-                // Then, fetch the full list
-                const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${count}`);
-                const results: PokemonListResult[] = response.data.results.map((p: any) => {
-                    const urlParts = p.url.split('/');
-                    const id = parseInt(urlParts[urlParts.length - 2]);
-                    return {
-                        name: p.name,
-                        url: p.url,
-                        id: id
-                    };
-                });
-                setAllPokemonRefs(results);
-            } catch (error) {
-                console.error('Error fetching Pokémon list:', error);
-            }
-        };
-        fetchAllPokemonRefs();
-    }, []);
-
-    useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm]);
+    }, [searchTerm, setCurrentPage]);
 
     const handleSort = (key: 'name' | 'id') => {
         if (sortKey === key) {
@@ -68,7 +65,7 @@ const ListView: React.FC = () => {
 
     useEffect(() => {
         const fetchPageDetails = async () => {
-            if (filteredAndSortedPokemonRefs.length === 0) {
+            if (filteredAndSortedPokemonRefs.length === 0 && searchTerm) {
                 setPokemonOnPage([]);
                 return;
             };
@@ -90,8 +87,10 @@ const ListView: React.FC = () => {
             }
         };
 
-        fetchPageDetails();
-    }, [filteredAndSortedPokemonRefs, currentPage]);
+        if (allPokemonRefs.length > 0) {
+            fetchPageDetails();
+        }
+    }, [filteredAndSortedPokemonRefs, currentPage, allPokemonRefs.length, setPokemonOnPage, setIsLoading, searchTerm]);
 
     const totalPages = Math.ceil(filteredAndSortedPokemonRefs.length / ITEMS_PER_PAGE);
 

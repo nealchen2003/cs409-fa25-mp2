@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { FaAngleLeft, FaAngleRight, FaArrowLeft } from 'react-icons/fa';
 import { Pokemon } from '../types';
+import './DetailView.css';
 
 const DetailView: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -35,15 +37,17 @@ const DetailView: React.FC = () => {
 
     return (
         <div className="detail-view">
+            <button onClick={() => navigate(-1)} className="back-button">
+                <FaArrowLeft /> Back
+            </button>
             <h2>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h2>
             <img src={pokemon.sprites.front_default} alt={pokemon.name} />
             <p>Height: {pokemon.height}</p>
             <p>Weight: {pokemon.weight}</p>
             <p>Types: {pokemon.types.map(t => t.type.name).join(', ')}</p>
             <div>
-                <button onClick={() => goToPokemon(pokemonId - 1)} disabled={pokemonId <= 1}>Previous</button>
-                <button onClick={() => navigate(-1)}>Back</button>
-                <button onClick={() => goToPokemon(pokemonId + 1)} disabled={pokemonId >= 151}>Next</button>
+                <button onClick={() => goToPokemon(pokemonId - 1)} disabled={pokemonId <= 1}><FaAngleLeft /></button>
+                <button onClick={() => goToPokemon(pokemonId + 1)} disabled={pokemonId >= 151}><FaAngleRight /></button>
             </div>
         </div>
     );
