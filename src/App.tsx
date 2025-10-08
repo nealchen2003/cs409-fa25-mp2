@@ -8,7 +8,7 @@ import './App.css';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="cs409-fa25-mp2">
       <div className="App">
         <Header />
         <main>
